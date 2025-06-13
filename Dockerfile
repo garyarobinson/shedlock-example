@@ -1,0 +1,31 @@
+FROM openjdk:21-jdk-slim
+
+LABEL maintainer="example@company.com"
+LABEL description="Database Cleanup Service"
+
+# Create app directory
+WORKDIR /app
+
+# Copy gradle wrapper and build files
+COPY gradlew .
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+
+# Copy source code
+COPY src src
+
+# Make gradlew executable
+RUN chmod +x ./gradlew
+
+# Build the application
+RUN ./gradlew build -x test
+
+# Create logs directory
+RUN mkdir -p /app/logs
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["java", "-jar", "build/libs/shedlock-example-0.0.1-SNAPSHOT.jar"]

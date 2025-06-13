@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cleanup_postgres
+    environment:
+      POSTGRES_DB: cleanup_db
+      POSTGRES_USER: cleanup_user
+      POSTGRES_PASSWORD: cleanup_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cleanup_user -d cleanup_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cleanup-service:
+    build: .
+    container_name: cleanup_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/cleanup_db
+      SPRING_DATASOURCE_USERNAME: cleanup_user
+      SPRING_DATASOURCE_PASSWORD: cleanup_password
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  postgres_data:
