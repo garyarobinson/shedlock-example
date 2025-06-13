@@ -14,6 +14,7 @@ A Spring Boot application that performs scheduled database cleanup operations us
 ## Project Structure
 
 ```
+.gitignore
 src/
 ├── main/
 │   ├── java/com/example/cleanupservice/
@@ -35,6 +36,7 @@ src/
 │           ├── V2__app_version.sql
 │           └── V3__insert_app_version_data.sql
 ├── build.gradle
+├── gradlew
 ├── settings.gradle
 ├── docker-compose.yml
 ├── Dockerfile
@@ -52,8 +54,8 @@ The application manages the following tables:
 ## Seed Data
 
 The application includes seed data to facilitate testing and development:
-- For the `audit_logs` table, entries are defined in `V1__initial_schema.sql`. Some entries are older than 90 days and are intended to be deleted by the scheduled cleanup.
-- For the `app_version` table, example entries are defined in `V3__insert_app_version_data.sql`. Some entries have `last_read` timestamps older than 90 days for cleanup testing.
+- The `audit_logs` table is created by [`V1__initial_schema.sql`](src/main/resources/db/migration/V1__initial_schema.sql). The cleanup service is designed to remove old records from this table.
+- For the `app_version` table, example entries are defined in [`V3__insert_app_version_data.sql`](src/main/resources/db/migration/V3__insert_app_version_data.sql). Some entries have `last_read` timestamps older than 90 days for cleanup testing.
 
 ## CRON Schedules
 
@@ -175,7 +177,7 @@ Key dependencies used:
 -   Spring Boot `3.5.0`
 -   Spring Data JPA
 -   PostgreSQL Driver
--   Flyway Core (`9.22.3`)
+-   Flyway (`org.flywaydb:flyway-database-postgresql:11.9.1`)
 -   ShedLock (`5.10.0`)
 -   Lombok
 -   Spring Boot Actuator
