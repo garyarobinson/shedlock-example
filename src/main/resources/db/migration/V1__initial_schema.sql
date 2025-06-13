@@ -22,7 +22,7 @@ CREATE TABLE audit_logs
     resource_type VARCHAR(100),
     resource_id   VARCHAR(100),
     details       TEXT,
-    ip_address    INET,
+    ip_address    VARCHAR(100),
     user_agent    TEXT,
     created_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     session_id    VARCHAR(100)

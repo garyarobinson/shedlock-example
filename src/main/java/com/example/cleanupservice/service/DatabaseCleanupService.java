@@ -30,7 +30,7 @@ public class DatabaseCleanupService {
     this.appVersionRepository = appVersionRepository;
   }
 
-  @Scheduled(cron = "0 */1 * * * ?")
+  @Scheduled(cron = "${cleanup.scheduled.audit-cleanup-cron:0 */1 * * * ?}")
   @SchedulerLock(name = "auditLogCleanup", lockAtMostFor = "9m", lockAtLeastFor = "1m")
   @Transactional
   public void cleanupAuditLogs() {
@@ -55,7 +55,7 @@ public class DatabaseCleanupService {
     }
   }
 
-  @Scheduled(cron = "0 */2 * * * ?")
+  @Scheduled(cron = "${cleanup.scheduled.app-version-cleanup-cron:0 */2 * * * ?}")
   @SchedulerLock(name = "appVersionCleanup", lockAtMostFor = "9m", lockAtLeastFor = "1m")
   @Transactional
   public void cleanupAppVersions() {
